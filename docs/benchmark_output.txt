@@ -1,0 +1,35 @@
+rtpaudio end-to-end benchmark (16000 Hz, 8.0 s source)
+
+1. Quality vs packet size (no loss)
+    samples       ms SNR stateful    SNR reset   overhead
+         80      5.0        32.53        10.71      28.6%
+        160     10.0        32.53        13.63      16.7%
+        320     20.0        32.53        16.53       9.1%
+        640     40.0        32.53        18.86       4.8%
+
+2. Quality vs packet loss (20 ms packets, depth 3)
+   SNR is a waveform metric and cannot see a click; peak jump is
+   the sample-to-sample discontinuity that is actually audible.
+     loss  silence (SNR/peak jump)    hold (SNR/peak jump)       fade (SNR/peak jump)       concealed
+       0%       32.54 dB /   6862       32.54 dB /   6862       32.54 dB /   6862       0
+       1%       19.49 dB /  14689       15.16 dB /  26715       17.18 dB /  20150       4
+       3%       12.80 dB /  15460        8.60 dB /  26715       10.64 dB /  23860      19
+       5%       11.43 dB /  15460        7.19 dB /  26715        9.24 dB /  24948      26
+      10%        8.85 dB /  15460        4.67 dB /  26715        6.76 dB /  24948      46
+      20%       -0.80 dB /  15460       -1.38 dB /  26715       -0.97 dB /  24948      86
+   source signal's own peak sample-to-sample jump: 5753
+
+3. Reordering tolerance: every 7th packet delayed by N positions
+   Playout pulls exactly one frame per packet interval, as a sound
+   card would, so buffer depth genuinely buys time for late arrivals.
+    depth   dist=1 late/concealed   dist=2 late/concealed   dist=4 late/concealed
+        1          0/0                  57/57                 57/57        
+        2          0/0                  57/57                 57/57        
+        3          0/0                   0/0                  57/57        
+        5          0/0                   0/0                   0/0         
+        8          0/0                   0/0                   0/0         
+
+4. UDP loopback (20 ms packets, depth 3)
+   400 packets, 123172 pkt/s, 173.43 Mbit/s payload
+   send-to-receive latency: p50 1.5 us, p99 29.0 us, p99.9 32.4 us
+   SNR end to end: 32.54 dB  (concealed 0, too late 0, dup 0)

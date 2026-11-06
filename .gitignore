@@ -1,0 +1,32 @@
+﻿# Build artifacts
+*.o
+*.obj
+*.exe
+*.out
+*.bin
+*.a
+*.so
+*.dll
+
+# Debug / coverage
+*.gcno
+*.gcda
+*.gcov
+coverage/
+
+# Temporary files
+*.log
+*.tmp
+*~
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python cache
+__pycache__/
+*.pyc
